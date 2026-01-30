@@ -1,0 +1,55 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:30:38
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:30:45
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/chinese-string-up-puzzle.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音版成语接龙</title>
+</head>
+
+<body>
+  <p id="lastWord">当前成语：万紫千红</p>
+  <p id="result"></p>
+  <button id="startButton">开始语音回答</button>
+  <script>
+    const lastWordElement = document.getElementById('lastWord');
+    const resultElement = document.getElementById('result');
+    const startButton = document.getElementById('startButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    let currentLastChar = '红';
+    const idioms = ['万紫千红', '红装素裹', '裹足不前', '前仆后继'];
+    let currentIdiomIndex = 0;
+
+    startButton.addEventListener('click', () => {
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const answer = event.results[0][0].transcript;
+      if (answer[0] === currentLastChar) {
+        resultElement.textContent = '回答正确！';
+        currentLastChar = answer[answer.length - 1];
+        currentIdiomIndex = (currentIdiomIndex + 1) % idioms.length;
+        lastWordElement.textContent = `当前成语：${answer}`;
+      } else {
+        resultElement.textContent = '回答错误，游戏结束！';
+        recognition.stop();
+      }
+      if (resultElement.textContent.includes('正确')) {
+        recognition.start();
+      }
+    });
+  </script>
+</body>
+
+</html>

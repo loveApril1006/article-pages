@@ -1,0 +1,98 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:16:36
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:36:31
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/adventure-confrontation.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音版魔法咒语对决</title>
+  <style>
+    #player-health {
+      font-size: 24px;
+    }
+
+    #computer-health {
+      font-size: 24px;
+    }
+
+    #magic-effect {
+      font-size: 36px;
+      text-align: center;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="player-health">玩家生命值: 100</div>
+  <div id="computer-health">电脑生命值: 100</div>
+  <div id="magic-effect"></div>
+  <button id="startButton">开始对决</button>
+  <script>
+    const playerHealthElement = document.getElementById('player-health');
+    const computerHealthElement = document.getElementById('computer-health');
+    const magicEffectElement = document.getElementById('magic-effect');
+    const startButton = document.getElementById('startButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    let playerHealth = 100;
+    let computerHealth = 100;
+    const magicSpells = {
+      "火焰攻击": "烈焰焚天咒",
+      "冰冻术": "寒霜刺骨咒"
+    };
+    let currentEffect;
+
+    startButton.addEventListener('click', () => {
+      // 电脑随机选择魔法效果
+      const effects = Object.keys(magicSpells);
+      currentEffect = effects[Math.floor(Math.random() * effects.length)];
+      magicEffectElement.textContent = `电脑施展 ${currentEffect}，请说出对应咒语`;
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const spokenSpell = event.results[0][0].transcript;
+      if (spokenSpell === magicSpells[currentEffect]) {
+        computerHealth -= 20;
+        computerHealthElement.textContent = `电脑生命值: ${computerHealth}`;
+        if (computerHealth <= 0) {
+          magicEffectElement.textContent = "你赢了！";
+          recognition.stop();
+        } else {
+          // 电脑反击
+          const effects = Object.keys(magicSpells);
+          currentEffect = effects[Math.floor(Math.random() * effects.length)];
+          magicEffectElement.textContent = `电脑反击，施展 ${currentEffect}，请说出对应咒语`;
+          playerHealth -= 10;
+          playerHealthElement.textContent = `玩家生命值: ${playerHealth}`;
+          if (playerHealth <= 0) {
+            magicEffectElement.textContent = "你输了！";
+            recognition.stop();
+          }
+        }
+      } else {
+        playerHealth -= 20;
+        playerHealthElement.textContent = `玩家生命值: ${playerHealth}`;
+        if (playerHealth <= 0) {
+          magicEffectElement.textContent = "你输了！";
+          recognition.stop();
+        } else {
+          const effects = Object.keys(magicSpells);
+          currentEffect = effects[Math.floor(Math.random() * effects.length)];
+          magicEffectElement.textContent = `你咒语说错，电脑继续施展 ${currentEffect}，请说出对应咒语`;
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

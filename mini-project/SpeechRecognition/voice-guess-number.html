@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音猜数字游戏</title>
+</head>
+
+<body>
+  <p id="hint">请说出你猜测的 1 - 100 之间的数字</p>
+  <button id="startButton">开始语音输入</button>
+  <script>
+    const hint = document.getElementById('hint');
+    const startButton = document.getElementById('startButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+
+    startButton.addEventListener('click', () => {
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const transcript = event.results[0][0].transcript;
+      const guess = parseInt(transcript);
+      if (!isNaN(guess)) {
+        if (guess > randomNumber) {
+          hint.textContent = '猜大了，再试试';
+        } else if (guess < randomNumber) {
+          hint.textContent = '猜小了，再试试';
+        } else {
+          hint.textContent = '猜对了，恭喜你！';
+        }
+      } else {
+        hint.textContent = '输入无效，请说出一个数字';
+      }
+      recognition.start();
+    });
+  </script>
+</body>
+
+</html>

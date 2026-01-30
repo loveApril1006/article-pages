@@ -1,0 +1,43 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:16:36
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:16:43
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/adventure.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音冒险游戏</title>
+</head>
+
+<body>
+  <p id="story">你身处一个神秘的森林，面前有两条路，你想往哪边走？（说“左边”或“右边”）</p>
+  <button id="startButton">开始语音输入</button>
+  <script>
+    const story = document.getElementById('story');
+    const startButton = document.getElementById('startButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    startButton.addEventListener('click', () => {
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const transcript = event.results[0][0].transcript;
+      if (transcript.includes('左边')) {
+        story.textContent = '你走进了左边的路，发现了一个古老的遗迹，你想进去探索吗？（说“进去”或“离开”）';
+      } else if (transcript.includes('右边')) {
+        story.textContent = '你走向了右边的路，遇到了一只凶猛的野兽，你想“战斗”还是“逃跑”？';
+      }
+      recognition.start();
+    });
+  </script>
+</body>
+
+</html>

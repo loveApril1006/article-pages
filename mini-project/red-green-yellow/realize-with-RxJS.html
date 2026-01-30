@@ -1,0 +1,88 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 20:52:49
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 20:53:25
+ * @FilePath: /article-pages/mini-project/red-green-yellow/realize-with-RxJS.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Lights with RxJS</title>
+  <style>
+    .traffic-light {
+      width: 100px;
+      background-color: #333;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .light {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 10px auto;
+      opacity: 0.2;
+    }
+
+    .red {
+      background-color: red;
+    }
+
+    .green {
+      background-color: green;
+    }
+
+    .yellow {
+      background-color: yellow;
+    }
+
+    .active {
+      opacity: 1;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/rxjs/7.8.1/rxjs.umd.min.js"></script>
+</head>
+
+<body>
+  <div class="traffic-light">
+    <div class="light red"></div>
+    <div class="light green"></div>
+    <div class="light yellow"></div>
+  </div>
+  <script>
+    const redLight = document.querySelector('.red');
+    const greenLight = document.querySelector('.green');
+    const yellowLight = document.querySelector('.yellow');
+    const lightDurations = [5000, 3000, 2000];
+    const lightColors = ['red', 'green', 'yellow'];
+
+    const lightStream = rxjs.interval(lightDurations.reduce((a, b) => a + b))
+      .pipe(
+        rxjs.operators.switchMap(() => rxjs.interval(0).pipe(
+          rxjs.operators.take(3),
+          rxjs.operators.map(index => ({ color: lightColors[index], duration: lightDurations[index] }))
+        ))
+      );
+
+    lightStream.subscribe(({ color, duration }) => {
+      redLight.classList.remove('active');
+      greenLight.classList.remove('active');
+      yellowLight.classList.remove('active');
+
+      if (color === 'red') {
+        redLight.classList.add('active');
+      } else if (color === 'green') {
+        greenLight.classList.add('active');
+      } else {
+        yellowLight.classList.add('active');
+      }
+    });
+  </script>
+</body>
+
+</html>

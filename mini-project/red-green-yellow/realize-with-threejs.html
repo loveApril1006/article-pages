@@ -1,0 +1,101 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:00:42
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:00:57
+ * @FilePath: /article-pages/mini-project/red-green-yellow/realize-with-threejs.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Lights in VR</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    #scene-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="scene-container"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+  <script>
+    // 创建场景、相机和渲染器
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('scene-container').appendChild(renderer.domElement);
+
+    // 创建红绿灯模型
+    const trafficLightGeometry = new THREE.BoxGeometry(1, 3, 1);
+    const trafficLightMaterial = new THREE.MeshBasicMaterial({ color: 0x333333 });
+    const trafficLight = new THREE.Mesh(trafficLightGeometry, trafficLightMaterial);
+    scene.add(trafficLight);
+
+    const lightGeometries = [
+      new THREE.SphereGeometry(0.3, 32, 32),
+      new THREE.SphereGeometry(0.3, 32, 32),
+      new THREE.SphereGeometry(0.3, 32, 32)
+    ];
+    const lightMaterials = [
+      new THREE.MeshBasicMaterial({ color: 0x330000 }),
+      new THREE.MeshBasicMaterial({ color: 0x003300 }),
+      new THREE.MeshBasicMaterial({ color: 0x333300 })
+    ];
+    const lights = [];
+    for (let i = 0; i < 3; i++) {
+      const light = new THREE.Mesh(lightGeometries[i], lightMaterials[i]);
+      light.position.y = 1 - i;
+      trafficLight.add(light);
+      lights.push(light);
+    }
+
+    // 相机位置和控制
+    camera.position.z = 5;
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
+    // 红绿灯切换逻辑
+    const durations = [5000, 3000, 2000];
+    let currentLightIndex = 0;
+
+    const changeLight = () => {
+      const colors = [0xff0000, 0x00ff00, 0xffff00];
+      const offColors = [0x330000, 0x003300, 0x333300];
+
+      for (let i = 0; i < 3; i++) {
+        if (i === currentLightIndex) {
+          lights[i].material.color.setHex(colors[i]);
+        } else {
+          lights[i].material.color.setHex(offColors[i]);
+        }
+      }
+
+      currentLightIndex = (currentLightIndex + 1) % 3;
+      setTimeout(changeLight, durations[(currentLightIndex - 1 + 3) % 3]);
+    };
+
+    changeLight();
+
+    // 渲染循环
+    const animate = () => {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    };
+
+    animate();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:43:58
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:44:07
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/Jan-Ken-Punch.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音版石头剪刀布游戏</title>
+</head>
+
+<body>
+  <h1>语音版石头剪刀布游戏</h1>
+  <p id="game-result">请点击下方按钮开始语音输入进行游戏。</p>
+  <button id="start-button">开始语音输入</button>
+  <script>
+    // 获取页面元素
+    const resultElement = document.getElementById('game-result');
+    const startButton = document.getElementById('start-button');
+
+    // 初始化语音识别对象
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    // 为开始按钮添加点击事件监听器
+    startButton.addEventListener('click', () => {
+      recognition.start();
+    });
+
+    // 处理语音识别结果
+    recognition.addEventListener('result', (event) => {
+      const playerChoice = event.results[0][0].transcript.trim();
+      const validChoices = ['石头', '剪刀', '布'];
+
+      // 检查玩家的选择是否有效
+      if (validChoices.includes(playerChoice)) {
+        // 电脑随机选择
+        const computerChoices = ['石头', '剪刀', '布'];
+        const computerChoice = computerChoices[Math.floor(Math.random() * 3)];
+
+        let gameOutcome;
+        if (playerChoice === computerChoice) {
+          gameOutcome = '平局！';
+        } else if (
+          (playerChoice === '石头' && computerChoice === '剪刀') ||
+          (playerChoice === '剪刀' && computerChoice === '布') ||
+          (playerChoice === '布' && computerChoice === '石头')
+        ) {
+          gameOutcome = '你赢了！';
+        } else {
+          gameOutcome = '你输了！';
+        }
+
+        resultElement.textContent = `你出了 ${playerChoice}，电脑出了 ${computerChoice}。${gameOutcome}`;
+      } else {
+        resultElement.textContent = '无效的选择，请说“石头”“剪刀”或“布”。';
+      }
+      recognition.start(); // 继续监听语音输入
+    });
+
+    // 处理语音识别错误
+    recognition.addEventListener('error', (event) => {
+      resultElement.textContent = `语音识别出错：${event.error}`;
+    });
+  </script>
+</body>
+
+</html>

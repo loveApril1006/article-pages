@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Lights with Gesture Recognition</title>
+  <style>
+    .traffic-light {
+      width: 100px;
+      background-color: #333;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .light {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 10px auto;
+      opacity: 0.2;
+    }
+
+    .red {
+      background-color: red;
+    }
+
+    .green {
+      background-color: green;
+    }
+
+    .yellow {
+      background-color: yellow;
+    }
+
+    .active {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="traffic-light">
+    <div class="light red"></div>
+    <div class="light green"></div>
+    <div class="light yellow"></div>
+  </div>
+  <video id="video" width="640" height="480" autoplay></video>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hand_landmarker/hand_landmarker.js"></script>
+  <script>
+    const redLight = document.querySelector('.red');
+    const greenLight = document.querySelector('.green');
+    const yellowLight = document.querySelector('.yellow');
+    const video = document.getElementById('video');
+
+    // 获取摄像头权限
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        video.srcObject = stream;
+      })
+      .catch((error) => {
+        console.error('Error accessing camera:', error);
+      });
+
+    // 初始化手势识别器
+    const handLandmarker = new Hands({
+      locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+      }
+    });
+    handLandmarker.setOptions({
+      maxNumHands: 1,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
+    });
+
+    let currentLightIndex = 0;
+    const durations = [5000, 3000, 2000];
+
+    // 模拟手势控制逻辑
+    handLandmarker.onResults((results) => {
+      if (results.multiHandLandmarks) {
+        // 这里可以根据具体手势（如握拳、张开手掌等）来控制红绿灯切换
+        // 例如，检测到握拳时切换到下一个灯
+        const isFist = checkFistGesture(results.multiHandLandmarks[0]);
+        if (isFist) {
+          redLight.classList.remove('active');
+          greenLight.classList.remove('active');
+          yellowLight.classList.remove('active');
+
+          currentLightIndex = (currentLightIndex + 1) % 3;
+
+          if (currentLightIndex === 0) {
+            redLight.classList.add('active');
+          } else if (currentLightIndex === 1) {
+            greenLight.classList.add('active');
+          } else {
+            yellowLight.classList.add('active');
+          }
+        }
+      }
+    });
+
+    const camera = new Camera(video, {
+      onFrame: async () => {
+        await handLandmarker.send({ image: video });
+      },
+      width: 640,
+      height: 480
+    });
+    camera.start();
+
+    // 简单的握拳检测函数示例
+    function checkFistGesture(landmarks) {
+      // 这里需要根据手部关键点的位置关系来判断是否握拳
+      // 例如，比较手指关节的位置等
+      return false;
+    }
+  </script>
+</body>
+
+</html>

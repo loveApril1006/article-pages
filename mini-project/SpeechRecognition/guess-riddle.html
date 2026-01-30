@@ -1,0 +1,57 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:21:32
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:21:51
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/guess-riddle.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音猜谜语</title>
+</head>
+
+<body>
+  <p id="riddle">小小金坛子，装着金饺子，吃掉金饺子，吐出白珠子。（打一水果）</p>
+  <p id="result"></p>
+  <button id="startButton">开始语音回答</button>
+  <script>
+    const riddleElement = document.getElementById('riddle');
+    const resultElement = document.getElementById('result');
+    const startButton = document.getElementById('startButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    const riddles = [
+      { question: '小小金坛子，装着金饺子，吃掉金饺子，吐出白珠子。（打一水果）', answer: '橘子' },
+      { question: '弯弯藤儿架上爬，串串珍珠上边挂。（打一水果）', answer: '葡萄' }
+    ];
+    let currentRiddleIndex = 0;
+
+    startButton.addEventListener('click', () => {
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const answer = event.results[0][0].transcript;
+      if (answer === riddles[currentRiddleIndex].answer) {
+        resultElement.textContent = '回答正确！';
+        currentRiddleIndex++;
+        if (currentRiddleIndex < riddles.length) {
+          riddleElement.textContent = riddles[currentRiddleIndex].question;
+        } else {
+          riddleElement.textContent = '游戏结束，你都猜对啦！';
+        }
+      } else {
+        resultElement.textContent = '回答错误，请再试一次。';
+      }
+      recognition.start();
+    });
+  </script>
+</body>
+
+</html>

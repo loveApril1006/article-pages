@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fff5f7 0%, #ffe8eb 100%);
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    }
+
+    .container {
+      position: relative;
+      padding: 30px 50px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(255, 92, 138, 0.15);
+      transform: rotate(-2deg);
+    }
+
+    .title-text {
+      font-size: 42px;
+      font-weight: 800;
+      background: linear-gradient(45deg, #FF3B6B, #FF6B8B);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: 2px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .decorate-line {
+      position: absolute;
+      height: 6px;
+      background: #FFD1DC;
+      border-radius: 3px;
+      bottom: -15px;
+      left: 10%;
+      right: 10%;
+    }
+
+    .emoji {
+      position: absolute;
+      font-size: 40px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    .emoji-1 {
+      top: -40px;
+      left: -30px;
+    }
+
+    .emoji-2 {
+      bottom: -40px;
+      right: -30px;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .highlight-star {
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      background: #FFD700;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      animation: sparkle 1.5s ease-in-out infinite;
+    }
+
+    .star-1 {
+      top: 15%;
+      left: -15px;
+    }
+
+    .star-2 {
+      top: 70%;
+      right: -10px;
+    }
+
+    @keyframes sparkle {
+      0% {
+        opacity: 0.8;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+
+      100% {
+        opacity: 0.8;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- 装饰元素 -->
+    <div class="emoji emoji-1">🎉</div>
+    <div class="emoji emoji-2">✨</div>
+    <div class="highlight-star star-1"></div>
+    <div class="highlight-star star-2"></div>
+
+    <!-- 主标题 -->
+    <h1 class="title-text">
+      前端周老师<br>
+      <span style="font-size: 36px;">入驻小红书啦</span>
+    </h1>
+
+    <!-- 装饰线条 -->
+    <div class="decorate-line"></div>
+  </div>
+</body>
+
+</html>

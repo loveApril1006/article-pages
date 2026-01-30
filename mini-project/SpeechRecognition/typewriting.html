@@ -1,0 +1,56 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:24:37
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:25:08
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/typewriting.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音打字比赛模拟</title>
+</head>
+
+<body>
+  <p id="textToType">生活就像海洋，只有意志坚强的人，才能到达彼岸。</p>
+  <p id="result"></p>
+  <button id="startButton">开始语音输入</button>
+  <script>
+    const textToTypeElement = document.getElementById('textToType');
+    const resultElement = document.getElementById('result');
+    const startButton = document.getElementById('startButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    const textToType = textToTypeElement.textContent;
+    let startTime;
+
+    startButton.addEventListener('click', () => {
+      startTime = new Date().getTime();
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const inputText = event.results[0][0].transcript;
+      const endTime = new Date().getTime();
+      const timeTaken = (endTime - startTime) / 1000;
+      let accuracy = 0;
+      if (inputText.length > 0) {
+        let correctChars = 0;
+        for (let i = 0; i < Math.min(inputText.length, textToType.length); i++) {
+          if (inputText[i] === textToType[i]) {
+            correctChars++;
+          }
+        }
+        accuracy = (correctChars / textToType.length) * 100;
+      }
+      resultElement.textContent = `用时：${timeTaken} 秒，准确率：${accuracy.toFixed(2)}%`;
+    });
+  </script>
+</body>
+
+</html>

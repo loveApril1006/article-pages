@@ -1,0 +1,103 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 20:42:47
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 20:43:03
+ * @FilePath: /article-pages/every-day-item-html/red-green-yellow-simple-css.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Lights with CSS Animation</title>
+  <style>
+    .traffic-light {
+      width: 100px;
+      background-color: #333;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .light {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 10px auto;
+      opacity: 0.2;
+    }
+
+    .red {
+      background-color: red;
+      animation: red-light 10s infinite;
+    }
+
+    .green {
+      background-color: green;
+      animation: green-light 10s infinite;
+    }
+
+    .yellow {
+      background-color: yellow;
+      animation: yellow-light 10s infinite;
+    }
+
+    @keyframes red-light {
+      0% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.2;
+      }
+
+      100% {
+        opacity: 0.2;
+      }
+    }
+
+    @keyframes green-light {
+      0% {
+        opacity: 0.2;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      80% {
+        opacity: 0.2;
+      }
+
+      100% {
+        opacity: 0.2;
+      }
+    }
+
+    @keyframes yellow-light {
+      0% {
+        opacity: 0.2;
+      }
+
+      80% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0.2;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="traffic-light">
+    <div class="light red"></div>
+    <div class="light green"></div>
+    <div class="light yellow"></div>
+  </div>
+</body>
+
+</html>

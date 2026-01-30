@@ -1,0 +1,55 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:28:19
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:28:28
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/feihualing.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音版飞花令</title>
+</head>
+
+<body>
+  <p id="keyword">当前关键字：月</p>
+  <p id="result"></p>
+  <button id="startButton">开始语音回答</button>
+  <script>
+    const keywordElement = document.getElementById('keyword');
+    const resultElement = document.getElementById('result');
+    const startButton = document.getElementById('startButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    const keywords = ['月', '花', '酒', '水'];
+    let currentIndex = 0;
+    let currentKeyword = keywords[currentIndex];
+
+    startButton.addEventListener('click', () => {
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const verse = event.results[0][0].transcript;
+      if (verse.includes(currentKeyword)) {
+        resultElement.textContent = '回答正确！';
+        currentIndex = (currentIndex + 1) % keywords.length;
+        currentKeyword = keywords[currentIndex];
+        keywordElement.textContent = `当前关键字：${currentKeyword}`;
+      } else {
+        resultElement.textContent = '回答错误，游戏结束！';
+        recognition.stop();
+      }
+      if (resultElement.textContent.includes('正确')) {
+        recognition.start();
+      }
+    });
+  </script>
+</body>
+
+</html>

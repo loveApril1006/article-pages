@@ -1,0 +1,61 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:33:30
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:33:37
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/imitation-show.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音版模仿秀</title>
+</head>
+
+<body>
+  <p id="result"></p>
+  <button id="startButton">开始模仿</button>
+  <audio id="sound" src="cat.mp3"></audio>
+  <script>
+    const resultElement = document.getElementById('result');
+    const startButton = document.getElementById('startButton');
+    const soundElement = document.getElementById('sound');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    const sounds = [
+      { src: 'cat.mp3', keyword: '喵' },
+      { src: 'dog.mp3', keyword: '汪' },
+      { src: 'car.mp3', keyword: '嘀' }
+    ];
+    let currentSoundIndex = 0;
+
+    startButton.addEventListener('click', () => {
+      soundElement.src = sounds[currentSoundIndex].src;
+      soundElement.play();
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const imitation = event.results[0][0].transcript;
+      const keyword = sounds[currentSoundIndex].keyword;
+      if (imitation.includes(keyword)) {
+        resultElement.textContent = '模仿成功！';
+        currentSoundIndex = (currentSoundIndex + 1) % sounds.length;
+        soundElement.src = sounds[currentSoundIndex].src;
+        soundElement.play();
+      } else {
+        resultElement.textContent = '模仿失败，游戏结束！';
+        recognition.stop();
+      }
+      if (resultElement.textContent.includes('成功')) {
+        recognition.start();
+      }
+    });
+  </script>
+</body>
+
+</html>

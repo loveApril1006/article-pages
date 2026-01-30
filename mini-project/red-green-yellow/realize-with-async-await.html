@@ -1,0 +1,89 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 20:50:42
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 20:51:09
+ * @FilePath: /article-pages/mini-project/red-green-yellow/realize-with-async-await.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traffic Lights</title>
+  <style>
+    .traffic-light {
+      width: 100px;
+      background-color: #333;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .light {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 10px auto;
+      opacity: 0.2;
+    }
+
+    .red {
+      background-color: red;
+    }
+
+    .green {
+      background-color: green;
+    }
+
+    .yellow {
+      background-color: yellow;
+    }
+
+    .active {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="traffic-light">
+    <div class="light red"></div>
+    <div class="light green"></div>
+    <div class="light yellow"></div>
+  </div>
+
+  <script>
+    const redLight = document.querySelector('.red');
+    const greenLight = document.querySelector('.green');
+    const yellowLight = document.querySelector('.yellow');
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function trafficLights() {
+      while (true) {
+        redLight.classList.add('active');
+        greenLight.classList.remove('active');
+        yellowLight.classList.remove('active');
+        await wait(5000); // 红灯亮 5 秒
+
+        redLight.classList.remove('active');
+        greenLight.classList.add('active');
+        yellowLight.classList.remove('active');
+        await wait(3000); // 绿灯亮 3 秒
+
+        redLight.classList.remove('active');
+        greenLight.classList.remove('active');
+        yellowLight.classList.add('active');
+        await wait(2000); // 黄灯亮 2 秒
+      }
+    }
+
+    trafficLights();
+  </script>
+</body>
+
+</html>

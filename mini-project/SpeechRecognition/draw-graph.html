@@ -1,0 +1,54 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:19:44
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:20:01
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/draw-graph.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音绘画指令</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="canvas" width="400" height="400"></canvas>
+  <button id="startButton">开始语音指令</button>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const startButton = document.getElementById('startButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    startButton.addEventListener('click', () => {
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const command = event.results[0][0].transcript;
+      if (command.includes('画一个圆形')) {
+        ctx.beginPath();
+        ctx.arc(200, 200, 50, 0, 2 * Math.PI);
+        ctx.stroke();
+      } else if (command.includes('画一条红色的线')) {
+        ctx.strokeStyle = 'red';
+        ctx.beginPath();
+        ctx.moveTo(100, 100);
+        ctx.lineTo(300, 300);
+        ctx.stroke();
+      }
+    });
+  </script>
+</body>
+
+</html>

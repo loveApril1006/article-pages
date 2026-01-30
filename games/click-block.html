@@ -1,0 +1,56 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:40:12
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:40:39
+ * @FilePath: /article-pages/games/click-block.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>点击方块游戏</title>
+  <style>
+    #box {
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      position: absolute;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="box" onclick="clicked()"></div>
+  <p>点击次数: <span id="clicks">0</span></p>
+  <p>用时: <span id="time">0</span> 秒</p>
+  <script>
+    const box = document.getElementById('box');
+    const clicks = document.getElementById('clicks');
+    const time = document.getElementById('time');
+    let clickCount = 0;
+    let startTime = Date.now();
+
+    function showBox() {
+      box.style.left = Math.random() * (window.innerWidth - 50) + 'px';
+      box.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+      box.style.display = 'block';
+    }
+
+    function clicked() {
+      clickCount++;
+      clicks.textContent = clickCount;
+      time.textContent = ((Date.now() - startTime) / 1000).toFixed(2);
+      box.style.display = 'none';
+      setTimeout(showBox, 1000);
+    }
+
+    showBox();
+  </script>
+</body>
+
+</html>

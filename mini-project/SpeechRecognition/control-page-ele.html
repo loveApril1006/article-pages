@@ -1,0 +1,51 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:17:44
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:17:51
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/control-page-ele.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音控制网页元素</title>
+  <style>
+    #box {
+      width: 100px;
+      height: 100px;
+      background-color: blue;
+      position: relative;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="box"></div>
+  <button id="startButton">开始语音控制</button>
+  <script>
+    const box = document.getElementById('box');
+    const startButton = document.getElementById('startButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    startButton.addEventListener('click', () => {
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const transcript = event.results[0][0].transcript;
+      if (transcript.includes('向右移动')) {
+        box.style.left = (parseInt(box.style.left) || 0) + 10 + 'px';
+      } else if (transcript.includes('改变颜色')) {
+        box.style.backgroundColor = 'red';
+      }
+      recognition.start();
+    });
+  </script>
+</body>
+
+</html>

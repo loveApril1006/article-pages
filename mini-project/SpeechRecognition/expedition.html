@@ -1,0 +1,63 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:37:44
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:37:52
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/expedition.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音版星际探险</title>
+  <style>
+    #spaceship {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background-color: #00f;
+    }
+
+    .planet {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background-color: #f00;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="spaceship"></div>
+  <div id="blue-planet" class="planet"></div>
+  <button id="startButton">开始星际探险</button>
+  <script>
+    const spaceship = document.getElementById('spaceship');
+    const bluePlanet = document.getElementById('blue-planet');
+    const startButton = document.getElementById('startButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    startButton.addEventListener('click', () => {
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const command = event.results[0][0].transcript;
+      if (command.includes('前往那颗蓝色星球')) {
+        const planetX = parseInt(bluePlanet.style.left) || 0;
+        const planetY = parseInt(bluePlanet.style.top) || 0;
+        spaceship.style.left = planetX + 'px';
+        spaceship.style.top = planetY + 'px';
+        alert('你到达了蓝色星球，发现了神秘资源！是否收集？');
+      } else if (command.includes('发射探测仪')) {
+        alert('探测仪发射成功，发现附近有外星生物活动迹象！');
+      }
+    });
+  </script>
+</body>
+
+</html>

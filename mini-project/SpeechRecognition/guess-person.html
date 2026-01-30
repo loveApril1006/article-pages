@@ -1,0 +1,53 @@
+<!--
+ * @Author: zhouxiongking zhouxiongking@163.com
+ * @Date: 2025-02-13 21:22:33
+ * @LastEditors: zhouxiongking zhouxiongking@163.com
+ * @LastEditTime: 2025-02-13 21:22:37
+ * @FilePath: /article-pages/mini-project/SpeechRecognition/guess-person.html
+ * @Description: 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>语音猜名人</title>
+</head>
+
+<body>
+  <p id="hint">提示：这是一位著名的科学家。</p>
+  <p id="result"></p>
+  <button id="startButton">开始语音猜测</button>
+  <script>
+    const hintElement = document.getElementById('hint');
+    const resultElement = document.getElementById('result');
+    const startButton = document.getElementById('startButton');
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'zh-CN';
+
+    const celebrities = ['牛顿', '爱因斯坦', '霍金'];
+    const randomCelebrity = celebrities[Math.floor(Math.random() * celebrities.length)];
+    const hints = {
+      '牛顿': '他发现了万有引力定律。',
+      '爱因斯坦': '他提出了相对论。',
+      '霍金': '他写了《时间简史》。'
+    };
+
+    startButton.addEventListener('click', () => {
+      recognition.start();
+    });
+
+    recognition.addEventListener('result', (event) => {
+      const guess = event.results[0][0].transcript;
+      if (guess === randomCelebrity) {
+        resultElement.textContent = '猜对了，太棒啦！';
+      } else {
+        resultElement.textContent = '猜错了，再试试。提示：' + hints[randomCelebrity];
+      }
+      recognition.start();
+    });
+  </script>
+</body>
+
+</html>
